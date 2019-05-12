@@ -1,0 +1,147 @@
+* {
+    /*box-sizing: border-box;*/
+}
+body, html {
+    margin: 10px;
+}
+pre {
+    margin: 0;
+}
+fieldset {
+    padding: 0;
+    border: none;
+}
+.imageCompressor {
+    display: flex;
+}
+.labelContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2px;
+}
+.compressedLabel {
+    margin: 0;
+    padding: 1px 4px;
+    background: limegreen;
+}
+.originalLabel {
+    margin: 0;
+    padding: 1px 4px;
+    background: tomato;
+}
+.image {
+    position: absolute;
+    border: 2px solid white;
+    outline: 3px solid;
+}
+.originalImage {
+    outline-color: tomato
+}
+.compressedImage {
+    outline-color: limegreen
+}
+.compressedImageMask {
+    position: absolute;
+    margin: -3px;
+    padding: 3px;
+    width: 0;
+    overflow: hidden;
+    border-right: 1px solid black;
+}
+
+.slider {
+    -webkit-appearance: none;
+}
+
+.slider:focus {
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: grab;
+    width: 0;
+    height: 0;
+    margin-left: -9px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+.sliderBottom::-webkit-slider-thumb {
+    border-bottom: 10px solid black;
+    margin-top: -18px;
+}
+.sliderTop::-webkit-slider-thumb {
+    border-top: 10px solid black;
+}
+
+.pngquantControls {
+    margin-top: 16px;
+}
+
+.pngquantControlsTitle {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.pngquantQuality {
+    width: 200px;
+}
+
+.pngquantQualityNumber {
+    font-family: monospace;
+}
+
+.pngquantDither {
+    width: 200px;
+}
+
+.pngquantDitherNumber {
+    font-family: monospace;
+}
+
+.warning {
+    background: #FF0000;
+}
+
+.footer {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+}
+
+.button {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

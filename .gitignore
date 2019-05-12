@@ -1,0 +1,6 @@
+yarn-debug.log*
+yarn-error.log*
+.yarn-integrity
+node_modules
+.idea
+*.DS_Store

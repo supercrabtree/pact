@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Pact</title>
+  </head>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+  </style>
+  <body>
+    <div class="imageCompressor">
+      <div class="preview">
+        <div class="labelContainer">
+          <pre class="compressedLabel">compressed</pre>
+          <pre class="originalLabel">original</pre>
+        </div>
+        <input class="slider sliderTop" type="range" min="0" max="1" step="any">
+        <div class="imageDiff">
+          <img class="image originalImage">
+          <div class="compressedImageMask">
+            <img class="image compressedImage">
+          </div>
+        </div>
+        <input class="slider sliderBottom" type="range" min="0" max="1" step="any">
+      </div>
+      <div class="pngquantControls">
+        <pre class="pngquantControlsTitle">pnquant</pre>
+
+        <form name="pngquantForm">
+          <pre class="pngquantQuality">Quality</pre>
+          <fieldset oninput="pngquantQualityNumber.value = pngquantQuality.valueAsNumber">
+            <input class="pngquantQuality" name="pngquantQuality" type="range" step="1" min="1" max="100" value="50">
+            <output class="pngquantQualityNumber" name="pngquantQualityNumber" for="pngquantQuality" >50</output>
+          </fieldset>
+          <fieldset oninput="pngquantDitherNumber.value = pngquantDither.valueAsNumber">
+            <pre>Floyd-Steinberg dither</pre>
+            <input class="pngquantDither" name="pngquantDither" type="range" step="0.001" min="0" max="1" value="1">
+            <output class="pngquantDitherNumber" name="pngquantDitherNumber" for="pngquantDither" >1</output>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="button cancelButton" type="button">Cancel</button>
+      <button class="button saveButton" type="button">Save All Images</button>
+    </div>
+    <script>require('./renderer.js')</script>
+  </body>
+</html>
