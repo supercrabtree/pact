@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -29,11 +29,6 @@ function createWindow () {
     mainWindow = undefined;
   })
 }
-
-const filesToCompress = process.argv.slice(2);
-
-ipcMain.on('ready', event => event.reply('files', filesToCompress));
-ipcMain.on('quit', app.quit);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -3,12 +3,13 @@ const path = require('path');
 const os = require('os');
 const filesize = require('filesize');
 const execa = require('execa');
-const { ipcRenderer } = require('electron');
+const { remote } = require('electron');
 const { debounce } = require('./debounce');
 
 let originalImageLocation;
 let compressedPngLocation;
 let originalImageSize;
+
 const originalLabel = document.querySelector('.originalLabel');
 const originalImage = document.querySelector('.originalImage');
 const compressedLabel = document.querySelector('.compressedLabel');
@@ -47,28 +48,14 @@ pngquantForm.addEventListener('change', debounce(async () => {
   compressedImage.setAttribute('src', compressedPngLocation);
 }, 200));
 
-cancelButton.addEventListener('click', () => ipcRenderer.send('quit'));
+cancelButton.addEventListener('click', () => remote.app.quit());
 saveButton.addEventListener('click', async () => {
   const originalExtension = path.extname(originalImageLocation);
   const originalBasename = path.basename(originalImageLocation, originalExtension);
 
   await fs.copyFile(originalImageLocation, originalBasename + '.original' + originalExtension);
   await fs.copyFile(compressedPngLocation, originalBasename + '.png');
-  ipcRenderer.send('quit');
-});
-
-ipcRenderer.on('files', async (e, files) => {
-  originalImageLocation = files[0];
-  originalImage.setAttribute('src', originalImageLocation);
-
-  compressedPngLocation = await compressPng();
-  compressedImage.setAttribute('src', compressedPngLocation);
-
-  const { size: originalImageSize } = await fs.stat(originalImageLocation);
-  setOriginalImageSize(originalImageSize);
-
-  const { size: compressedPngSize } = await fs.stat(compressedPngLocation);
-  setCompressedPngSize(compressedPngSize);
+  remote.app.quit();
 });
 
 function setOriginalImageSize(size) {
@@ -101,4 +88,20 @@ function compressPng() {
     });
 }
 
-ipcRenderer.send('ready');
+async function init() {
+  const files = remote.process.argv.slice(2);
+
+  originalImageLocation = files[0];
+  originalImage.setAttribute('src', originalImageLocation);
+
+  compressedPngLocation = await compressPng();
+  compressedImage.setAttribute('src', compressedPngLocation);
+
+  const { size: originalImageSize } = await fs.stat(originalImageLocation);
+  setOriginalImageSize(originalImageSize);
+
+  const { size: compressedPngSize } = await fs.stat(compressedPngLocation);
+  setCompressedPngSize(compressedPngSize);
+}
+
+init();
