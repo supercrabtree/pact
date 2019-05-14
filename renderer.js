@@ -10,8 +10,8 @@ const saveButton = document.querySelector('.saveButton');
 let states = [];
 
 remote.process.argv.slice(2).map(imageFile => {
-  createCompressionSection(imageFile).then(
-    ({ element, state }) => {
+  createCompressionSection(imageFile)
+    .then(({ element, state }) => {
       document.querySelector('.compressionSections').appendChild(element);
       states.push(state);
     });
@@ -20,13 +20,14 @@ remote.process.argv.slice(2).map(imageFile => {
 cancelButton.addEventListener('click', () => remote.app.quit());
 
 saveButton.addEventListener('click', async () => {
-  await Promise.all(states.map(async ({ originalImageURI, compressedPngURI }) => {
+  await Promise.all(states.map(async ({ originalImageURI, compressedPngURI, compressedWebpURI }) => {
     const originalDirname = path.dirname(originalImageURI);
     const originalExtension = path.extname(originalImageURI);
     const originalBasename = path.basename(originalImageURI, originalExtension);
 
     await fs.copyFile(originalImageURI, path.join(originalDirname, originalBasename + '.original' + originalExtension));
     await fs.copyFile(compressedPngURI, path.join(originalDirname, originalBasename + '.png'));
+    await fs.copyFile(compressedWebpURI, path.join(originalDirname, originalBasename + '.webp'));
   }));
 
   remote.app.quit();

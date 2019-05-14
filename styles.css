@@ -80,20 +80,24 @@ hr {
     border-top: 10px solid black;
 }
 
-.pngquantControls {
-    margin-top: 16px;
+.pngquantControls,
+.webpControls {
+    margin-top: 60px;
 }
 
-.pngquantControlsTitle {
+.pngquantControlsTitle,
+.webpControlsTitle {
     font-size: 1.6rem;
     margin-bottom: 10px;
 }
 
-.pngquantQuality {
+.pngquantQuality,
+.webpQuality {
     width: 200px;
 }
 
-.pngquantQualityNumber {
+.pngquantQualityNumber,
+.webpQualityNumber {
     font-family: monospace;
 }
 
@@ -119,35 +123,3 @@ hr {
     font-size: 1rem;
     cursor: pointer;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -21,21 +21,37 @@ module.exports = async function createCompressionSection(originalImageURI) {
         </div>
         <input class="slider sliderBottom" type="range" min="0" max="1" step="any">
       </div>
-      <div class="pngquantControls">
-        <pre class="pngquantControlsTitle">pnquant</pre>
-
-        <form name="pngquantForm" class="pngquantForm">
-          <pre class="pngquantQuality">Quality</pre>
-          <fieldset oninput="pngquantQualityNumber.value = pngquantQuality.valueAsNumber">
-            <input class="pngquantQuality" name="pngquantQuality" type="range" step="1" min="1" max="100" value="50">
-            <output class="pngquantQualityNumber" name="pngquantQualityNumber" for="pngquantQuality" >50</output>
-          </fieldset>
-          <fieldset oninput="pngquantDitherNumber.value = pngquantDither.valueAsNumber">
-            <pre>Floyd-Steinberg dither</pre>
-            <input class="pngquantDither" name="pngquantDither" type="range" step="0.001" min="0" max="1" value="1">
-            <output class="pngquantDitherNumber" name="pngquantDitherNumber" for="pngquantDither" >1</output>
-          </fieldset>
-        </form>
+      <div>
+        <div class="pngquantControls">
+          <pre class="pngquantControlsTitle">pnquant</pre>
+          <form name="pngquantForm" class="pngquantForm">
+            <pre class="pngquantQuality">Quality</pre>
+            <fieldset oninput="pngquantQualityNumber.value = pngquantQuality.valueAsNumber">
+              <input class="pngquantQuality" name="pngquantQuality" type="range" step="1" min="1" max="100" value="50">
+              <output class="pngquantQualityNumber" name="pngquantQualityNumber" for="pngquantQuality">50</output>
+            </fieldset>
+            <fieldset oninput="pngquantDitherNumber.value = pngquantDither.valueAsNumber">
+              <pre>Floyd-Steinberg dither</pre>
+              <input class="pngquantDither" name="pngquantDither" type="range" step="0.001" min="0" max="1" value="1">
+              <output class="pngquantDitherNumber" name="pngquantDitherNumber" for="pngquantDither">1</output>
+            </fieldset>
+          </form>
+        </div>
+        <div class="webpControls">
+          <pre class="webpControlsTitle">webp</pre>
+          <form name="webpForm" class="webpForm">
+            <pre class="webpQuality">Quality</pre>
+            <fieldset oninput="webpQualityNumber.value = webpQuality.valueAsNumber">
+              <input class="webpQuality" name="webpQuality" type="range" step="1" min="1" max="100" value="50">
+              <output class="webpQualityNumber" name="webpQualityNumber" for="webpQuality">50</output>
+            </fieldset>
+            <!--<fieldset oninput="webpDitherNumber.value = webpDither.valueAsNumber">-->
+              <!--<pre>Floyd-Steinberg dither</pre>-->
+              <!--<input class="webpDither" name="webpDither" type="range" step="0.001" min="0" max="1" value="1">-->
+              <!--<output class="webpDitherNumber" name="webpDitherNumber" for="webpDither" >1</output>-->
+            <!--</fieldset>-->
+          </form>
+        </div>
       </div>
     </div>
   `;
@@ -48,10 +64,12 @@ module.exports = async function createCompressionSection(originalImageURI) {
   const compressedLabel = section.querySelector('.compressedLabel');
   const compressedImage = section.querySelector('.compressedImage');
   const compressedImageMask = section.querySelector('.compressedImageMask');
-  const pngquantControlsTitle = section.querySelector('.pngquantControlsTitle ');
+  const pngquantControlsTitle = section.querySelector('.pngquantControlsTitle');
+  const webpControlsTitle = section.querySelector('.webpControlsTitle');
   const sliderTop = section.querySelector('.sliderTop');
   const sliderBottom = section.querySelector('.sliderBottom');
   const pngquantForm = section.querySelector('.pngquantForm');
+  const webpForm = section.querySelector('.webpForm');
   const imageDiff = section.querySelector('.imageDiff');
   const labelContainer = section.querySelector('.labelContainer');
 
@@ -75,26 +93,40 @@ module.exports = async function createCompressionSection(originalImageURI) {
   });
 
   pngquantForm.addEventListener('change', debounce(async () => {
-    const { URI, size } = await compressPng(originalImageURI, pngquantForm);
-    state.compressedPngURI = URI;
-    setCompressedPngSize(size, originalImageSize, compressedLabel, pngquantControlsTitle);
+    const { pngURI, pngSize } = await compressPng(originalImageURI, pngquantForm);
+    state.compressedPngURI = pngURI;
+    setCompressedPngSize(pngSize, originalImageSize, compressedLabel, pngquantControlsTitle);
     compressedImage.setAttribute('src', state.compressedPngURI);
-  }, 20));
+  }, 100));
+
+  webpForm.addEventListener('change', debounce(async () => {
+    const { webpURI, webpSize } = await compressWebp(originalImageURI, webpForm);
+    state.compressedWebpURI = webpURI;
+    setCompressedWebpSize(webpSize, originalImageSize, compressedLabel, webpControlsTitle);
+    compressedImage.setAttribute('src', state.compressedWebpURI);
+  }, 100));
 
   let originalImageSize;
   let state = {
     originalImageURI,
     compressedPngURI: undefined,
+    compressedWebpURI: undefined,
   };
-
-  const { size, URI } = await compressPng(originalImageURI, pngquantForm);
-  state.compressedPngURI = URI;
-  compressedImage.setAttribute('src', state.compressedPngURI);
-  originalImage.setAttribute('src', originalImageURI);
 
   originalImageSize = (await fs.stat(originalImageURI)).size;
   setOriginalImageSize(originalImageSize, originalLabel);
-  setCompressedPngSize(size, originalImageSize, compressedLabel, pngquantControlsTitle);
+
+  const { webpURI, webpSize } = await compressWebp(originalImageURI, webpForm);
+  state.compressedWebpURI = webpURI;
+  setCompressedWebpSize(webpSize, originalImageSize, compressedLabel, webpControlsTitle);
+  compressedImage.setAttribute('src', state.compressedWebpURI);
+
+  const { pngURI, pngSize } = await compressPng(originalImageURI, pngquantForm);
+  state.compressedPngURI = pngURI;
+  setCompressedPngSize(pngSize, originalImageSize, compressedLabel, pngquantControlsTitle);
+  compressedImage.setAttribute('src', state.compressedPngURI);
+
+  originalImage.setAttribute('src', originalImageURI);
 
   setTimeout(() => section.style.visibility = 'visible');
 
@@ -108,14 +140,14 @@ function setOriginalImageSize(size, originalLabel) {
   originalLabel.textContent = 'original ' + filesize(size);
 }
 
+function getPercentageSavings(originalSize, compressedSize) {
+  return (Math.ceil((compressedSize/originalSize) * 10000)/100)
+}
+
 function setCompressedPngSize(size, originalImageSize, compressedLabel, pngquantControlsTitle) {
   const savings = getPercentageSavings(originalImageSize, size);
   compressedLabel.textContent = 'compressed png ' + filesize(size);
   pngquantControlsTitle.innerHTML = `pnquant – ${filesize(size)} (<span class="${savings >= 100 ? 'warning' : ''}">${savings}%</span>)`;
-}
-
-function getPercentageSavings(originalSize, compressedSize) {
-  return (Math.ceil((compressedSize/originalSize) * 10000)/100)
 }
 
 function compressPng(originalImageURI, pngquantForm) {
@@ -125,6 +157,22 @@ function compressPng(originalImageURI, pngquantForm) {
 
   return execa(`pngquant --verbose --quality=0-${quality} --floyd=${dither} --speed=1 -o ${tmpfile} ${originalImageURI}`, { shell: true })
     .then(() => fs.stat(tmpfile))
-    .then(stats => ({ URI: tmpfile, size: stats.size }))
+    .then(stats => ({ pngURI: tmpfile, pngSize: stats.size }))
+    .catch((e) => console.log(e));
+}
+
+function setCompressedWebpSize(size, originalImageSize, compressedLabel, webpControlsTitle) {
+  const savings = getPercentageSavings(originalImageSize, size);
+  compressedLabel.textContent = 'compressed webp ' + filesize(size);
+  webpControlsTitle.innerHTML = `webp – ${filesize(size)} (<span class="${savings >= 100 ? 'warning' : ''}">${savings}%</span>)`;
+}
+
+function compressWebp(originalImageURI, webpForm) {
+  const quality = webpForm.webpQuality.valueAsNumber;
+  const tmpfile = os.tmpdir() + '/pact-' + Date.now() + '.webp';
+
+  return execa(`cwebp -q ${quality} -mt -m 6 -o ${tmpfile} ${originalImageURI}`, { shell: true })
+    .then(() => fs.stat(tmpfile))
+    .then(stats => ({ webpURI: tmpfile, webpSize: stats.size }))
     .catch((e) => console.log(e));
 }
