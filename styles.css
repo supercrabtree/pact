@@ -81,23 +81,27 @@ hr {
 }
 
 .pngquantControls,
-.webpControls {
+.webpControls,
+.mozjpegControls {
     margin-top: 60px;
 }
 
 .pngquantControlsTitle,
-.webpControlsTitle {
+.webpControlsTitle,
+.mozjpegControlsTitle{
     font-size: 1.6rem;
     margin-bottom: 10px;
 }
 
 .pngquantQuality,
-.webpQuality {
+.webpQuality,
+.mozjpegQuality {
     width: 200px;
 }
 
 .pngquantQualityNumber,
-.webpQualityNumber {
+.webpQualityNumber,
+.mozjpegQualityNumber{
     font-family: monospace;
 }
 

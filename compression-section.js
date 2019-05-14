@@ -45,11 +45,16 @@ module.exports = async function createCompressionSection(originalImageURI) {
               <input class="webpQuality" name="webpQuality" type="range" step="1" min="1" max="100" value="50">
               <output class="webpQualityNumber" name="webpQualityNumber" for="webpQuality">50</output>
             </fieldset>
-            <!--<fieldset oninput="webpDitherNumber.value = webpDither.valueAsNumber">-->
-              <!--<pre>Floyd-Steinberg dither</pre>-->
-              <!--<input class="webpDither" name="webpDither" type="range" step="0.001" min="0" max="1" value="1">-->
-              <!--<output class="webpDitherNumber" name="webpDitherNumber" for="webpDither" >1</output>-->
-            <!--</fieldset>-->
+          </form>
+        </div>
+        <div class="mozjpegControls">
+          <pre class="mozjpegControlsTitle">mozjpeg</pre>
+          <form name="mozjpegForm" class="mozjpegForm">
+            <pre class="mozjpegQuality">Quality</pre>
+            <fieldset oninput="mozjpegQualityNumber.value = mozjpegQuality.valueAsNumber">
+              <input class="mozjpegQuality" name="mozjpegQuality" type="range" step="1" min="1" max="100" value="50">
+              <output class="mozjpegQualityNumber" name="mozjpegQualityNumber" for="mozjpegQuality">50</output>
+            </fieldset>
           </form>
         </div>
       </div>
@@ -66,10 +71,12 @@ module.exports = async function createCompressionSection(originalImageURI) {
   const compressedImageMask = section.querySelector('.compressedImageMask');
   const pngquantControlsTitle = section.querySelector('.pngquantControlsTitle');
   const webpControlsTitle = section.querySelector('.webpControlsTitle');
+  const mozjpegControlsTitle = section.querySelector('.mozjpegControlsTitle');
   const sliderTop = section.querySelector('.sliderTop');
   const sliderBottom = section.querySelector('.sliderBottom');
   const pngquantForm = section.querySelector('.pngquantForm');
   const webpForm = section.querySelector('.webpForm');
+  const mozjpegForm = section.querySelector('.mozjpegForm');
   const imageDiff = section.querySelector('.imageDiff');
   const labelContainer = section.querySelector('.labelContainer');
 
@@ -106,15 +113,28 @@ module.exports = async function createCompressionSection(originalImageURI) {
     compressedImage.setAttribute('src', state.compressedWebpURI);
   }, 100));
 
+  mozjpegForm.addEventListener('change', debounce(async () => {
+    const { mozjpegURI, mozjpegSize } = await compressMozjpeg(originalImageURI, mozjpegForm);
+    state.compressedMozjpegURI = mozjpegURI;
+    setCompressedMozjpegSize(mozjpegSize, originalImageSize, compressedLabel, mozjpegControlsTitle);
+    compressedImage.setAttribute('src', state.compressedMozjpegURI);
+  }, 100));
+
   let originalImageSize;
   let state = {
     originalImageURI,
     compressedPngURI: undefined,
     compressedWebpURI: undefined,
+    compressedJpegURI: undefined,
   };
 
   originalImageSize = (await fs.stat(originalImageURI)).size;
   setOriginalImageSize(originalImageSize, originalLabel);
+
+  const { mozjpegURI, mozjpegSize } = await compressMozjpeg(originalImageURI, mozjpegForm);
+  state.compressedMozjpegURI = mozjpegURI;
+  setCompressedMozjpegSize(mozjpegSize, originalImageSize, compressedLabel, mozjpegControlsTitle);
+  compressedImage.setAttribute('src', state.compressedMozjpegURI);
 
   const { webpURI, webpSize } = await compressWebp(originalImageURI, webpForm);
   state.compressedWebpURI = webpURI;
@@ -174,5 +194,21 @@ function compressWebp(originalImageURI, webpForm) {
   return execa(`cwebp -q ${quality} -mt -m 6 -o ${tmpfile} ${originalImageURI}`, { shell: true })
     .then(() => fs.stat(tmpfile))
     .then(stats => ({ webpURI: tmpfile, webpSize: stats.size }))
+    .catch((e) => console.log(e));
+}
+
+function setCompressedMozjpegSize(size, originalImageSize, compressedLabel, mozjpegControlsTitle) {
+  const savings = getPercentageSavings(originalImageSize, size);
+  compressedLabel.textContent = 'compressed mozjpeg ' + filesize(size);
+  mozjpegControlsTitle.innerHTML = `mozjpeg – ${filesize(size)} (<span class="${savings >= 100 ? 'warning' : ''}">${savings}%</span>)`;
+}
+
+function compressMozjpeg(originalImageURI, mozjpegForm) {
+  const quality = mozjpegForm.mozjpegQuality.valueAsNumber;
+  const tmpfile = os.tmpdir() + '/pact-' + Date.now() + '.jpeg';
+
+  return execa(`/usr/local/opt/mozjpeg/bin/cjpeg -progressive -quality ${quality} -outfile ${tmpfile} ${originalImageURI}`, { shell: true })
+    .then(() => fs.stat(tmpfile))
+    .then(stats => ({ mozjpegURI: tmpfile, mozjpegSize: stats.size }))
     .catch((e) => console.log(e));
 }
