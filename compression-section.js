@@ -115,9 +115,9 @@ module.exports = async function createCompressionSection(originalImageURI) {
 
   mozjpegForm.addEventListener('change', debounce(async () => {
     const { mozjpegURI, mozjpegSize } = await compressMozjpeg(originalImageURI, mozjpegForm);
-    state.compressedMozjpegURI = mozjpegURI;
+    state.compressedJpegURI = mozjpegURI;
     setCompressedMozjpegSize(mozjpegSize, originalImageSize, compressedLabel, mozjpegControlsTitle);
-    compressedImage.setAttribute('src', state.compressedMozjpegURI);
+    compressedImage.setAttribute('src', state.compressedJpegURI);
   }, 100));
 
   let originalImageSize;
@@ -132,9 +132,9 @@ module.exports = async function createCompressionSection(originalImageURI) {
   setOriginalImageSize(originalImageSize, originalLabel);
 
   const { mozjpegURI, mozjpegSize } = await compressMozjpeg(originalImageURI, mozjpegForm);
-  state.compressedMozjpegURI = mozjpegURI;
+  state.compressedJpegURI = mozjpegURI;
   setCompressedMozjpegSize(mozjpegSize, originalImageSize, compressedLabel, mozjpegControlsTitle);
-  compressedImage.setAttribute('src', state.compressedMozjpegURI);
+  compressedImage.setAttribute('src', state.compressedJpegURI);
 
   const { webpURI, webpSize } = await compressWebp(originalImageURI, webpForm);
   state.compressedWebpURI = webpURI;
