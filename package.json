@@ -2,9 +2,11 @@
   "name": "pact-image-compressor",
   "version": "1.0.0",
   "description": "An image compression tool",
+  "bin": "cli.js",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package": "electron-builder --dir"
   },
   "repository": "https://github.com/supercrabtree/pact",
   "keywords": [
@@ -13,10 +15,12 @@
   ],
   "author": "supercrabtree@googlemail.com",
   "devDependencies": {
-    "electron": "^5.0.0"
+    "electron": "^5.0.0",
+    "electron-builder": "^20.40.2"
   },
   "dependencies": {
-    "execa": "1.0.0",
-    "filesize": "4.1.2"
+    "execa": "^1.0.0",
+    "filesize": "^4.1.2",
+    "update-notifier": "^3.0.0"
   }
 }
