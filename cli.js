@@ -29,6 +29,6 @@ if (hadError.length) {
   console.error(`Missing dependencies please run \`brew install ${hadError.join(' ')}\``);
 } else {
   updateNotifier({pkg}).notify();
-  execa('./dist/mac/pact-image-compressor.app/Contents/MacOS/pact-image-compressor', process.argv, {shell: true})
+  execa('yarn start', process.argv, {shell: true})
     .catch(e => console.error(e));
 }

@@ -2,7 +2,9 @@
   "name": "pact-image-compressor",
   "version": "1.0.0",
   "description": "An image compression tool",
-  "bin": "cli.js",
+  "bin": {
+    "pact": "cli.js"
+  },
   "main": "main.js",
   "scripts": {
     "start": "electron .",
