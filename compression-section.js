@@ -40,6 +40,33 @@ module.exports = async function createCompressionSection(originalImageURI) {
               <input class="webpQuality" name="webpQuality" type="range" step="1" min="1" max="100" value="50">
               <output class="webpQualityNumber" name="webpQualityNumber" for="webpQuality">50</output>
             </fieldset>
+            <pre class="webpPreset">Preset</pre>
+            <fieldset class="webpPreset">
+              <div>
+                <input name="webpPreset" type="radio" value="default" checked>
+                <label class="webpPresetLabel" for="webpPresetDefault">default</label>
+              </div>
+              <div>
+                <input name="webpPreset" type="radio" value="photo">
+                <label class="webpPresetLabel">photo</label>
+              </div>
+              <div>
+                <input name="webpPreset" type="radio" value="picture">
+                <label class="webpPresetLabel">picture</label>
+              </div>
+              <div>
+                <input name="webpPreset" type="radio" value="drawing">
+                <label class="webpPresetLabel">drawing</label>
+              </div>
+              <div>
+                <input name="webpPreset" type="radio" value="icon">
+                <label class="webpPresetLabel">icon</label>
+              </div>
+              <div>
+                <input name="webpPreset" type="radio" value="text">
+                <label class="webpPresetLabel">text</label>
+              </div>
+            </fieldset>
           </form>
         </div>
         <div class="mozjpegControls">
@@ -183,9 +210,10 @@ function setCompressedWebpSize(size, originalImageSize, compressedLabel, webpCon
 
 function compressWebp(originalImageURI, webpForm) {
   const quality = webpForm.webpQuality.valueAsNumber;
+  const preset = webpForm.webpPreset.value;
   const tmpfile = os.tmpdir() + '/pact-' + Date.now() + '.webp';
 
-  return execa(`cwebp -q ${quality} -mt -m 6 -o ${tmpfile} ${originalImageURI}`, { shell: true })
+  return execa(`cwebp -preset ${preset} -q ${quality} -mt -m 6 -o ${tmpfile} ${originalImageURI}`, { shell: true })
     .then(() => fs.stat(tmpfile))
     .then(stats => ({ webpURI: tmpfile, webpSize: stats.size }))
     .catch((e) => console.log(e));

@@ -101,15 +101,8 @@ hr {
 
 .pngquantQualityNumber,
 .webpQualityNumber,
-.mozjpegQualityNumber{
-    font-family: monospace;
-}
-
-.pngquantDither {
-    width: 200px;
-}
-
-.pngquantDitherNumber {
+.mozjpegQualityNumber,
+.webpPresetLabel {
     font-family: monospace;
 }
 
