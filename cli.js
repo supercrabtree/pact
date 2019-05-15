@@ -30,10 +30,10 @@ if (hadError.length) {
 
   console.error(`Missing dependencies please run \`brew install ${hadError.join(' ')}\``);
 } else {
-  const cmd = path.join(__dirname, './node_modules/.bin/electron');
+  const cmd = `${path.join(__dirname, './node_modules/.bin/electron')} ${__dirname}`;
 
   updateNotifier({pkg}).notify();
-  
-  execa(cmd + ' .', process.argv, {shell: true})
+
+  execa(cmd, process.argv, {shell: true})
     .catch(e => console.error(e));
 }
