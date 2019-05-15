@@ -9,13 +9,15 @@ const saveButton = document.querySelector('.saveButton');
 
 let states = [];
 
-remote.process.argv.slice(2).map(imageFile => {
-  createCompressionSection(imageFile)
-    .then(({ element, state }) => {
-      document.querySelector('.compressionSections').appendChild(element);
-      states.push(state);
-    });
-});
+remote.process.argv.slice(2)
+  .filter(file => !!file.match('\.png$'))
+  .map(pngFile => {
+    createCompressionSection(pngFile)
+      .then(({ element, state }) => {
+        document.querySelector('.compressionSections').appendChild(element);
+        states.push(state);
+      });
+  });
 
 cancelButton.addEventListener('click', () => remote.app.quit());
 
