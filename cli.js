@@ -4,6 +4,7 @@ const updateNotifier = require('update-notifier');
 const pkg = require('./package.json');
 const execa = require('execa');
 const fs = require('fs');
+const path = require('path');
 
 let hadError = [];
 
@@ -26,9 +27,13 @@ try {
 }
 
 if (hadError.length) {
+
   console.error(`Missing dependencies please run \`brew install ${hadError.join(' ')}\``);
 } else {
+  const cmd = path.join(__dirname, './node_modules/.bin/electron');
+
   updateNotifier({pkg}).notify();
-  execa('electron .', process.argv, {shell: true})
+  
+  execa(cmd + ' .', process.argv, {shell: true})
     .catch(e => console.error(e));
 }
