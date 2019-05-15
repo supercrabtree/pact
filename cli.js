@@ -32,7 +32,7 @@ if (hadError.length) {
 } else {
   const cmd = `${path.join(__dirname, './node_modules/.bin/electron')} ${__dirname}`;
 
-  updateNotifier({pkg}).notify();
+  updateNotifier({ pkg, updateCheckInterval: 0}).notify();
 
   execa(cmd, process.argv, {shell: true})
     .catch(e => console.error(e));
