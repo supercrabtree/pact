@@ -1,6 +1,6 @@
 {
   "name": "pact-image-compressor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An image compression tool",
   "bin": {
     "pact": "cli.js"
