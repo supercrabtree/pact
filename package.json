@@ -15,6 +15,7 @@
     "image",
     "compression"
   ],
+  "preferGlobal": true,
   "author": "supercrabtree@googlemail.com",
   "dependencies": {
     "electron": "^5.0.0",
