@@ -29,6 +29,6 @@ if (hadError.length) {
   console.error(`Missing dependencies please run \`brew install ${hadError.join(' ')}\``);
 } else {
   updateNotifier({pkg}).notify();
-  execa('yarn start', process.argv, {shell: true})
+  execa('electron .', process.argv, {shell: true})
     .catch(e => console.error(e));
 }
