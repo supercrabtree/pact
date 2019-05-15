@@ -21,7 +21,7 @@ module.exports = async function createCompressionSection(originalImageURI) {
         </div>
         <input class="slider sliderBottom" type="range" min="0" max="1" step="any">
       </div>
-      <div>
+      <div class="compressorControls">
         <div class="pngquantControls">
           <pre class="pngquantControlsTitle">pnquant</pre>
           <form name="pngquantForm" class="pngquantForm">

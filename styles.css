@@ -80,10 +80,14 @@ hr {
     border-top: 10px solid black;
 }
 
+.compressorControls {
+    margin-bottom: 60px;
+}
+
 .pngquantControls,
 .webpControls,
 .mozjpegControls {
-    margin-top: 60px;
+    margin-top: 25px;
 }
 
 .pngquantControlsTitle,
