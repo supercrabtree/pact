@@ -14,11 +14,8 @@
     "compression"
   ],
   "author": "supercrabtree@googlemail.com",
-  "devDependencies": {
-    "electron": "^5.0.0",
-    "electron-builder": "^20.40.2"
-  },
   "dependencies": {
+    "electron": "^5.0.0",
     "execa": "^1.0.0",
     "filesize": "^4.1.2",
     "update-notifier": "^3.0.0"
