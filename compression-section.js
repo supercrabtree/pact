@@ -30,11 +30,6 @@ module.exports = async function createCompressionSection(originalImageURI) {
               <input class="pngquantQuality" name="pngquantQuality" type="range" step="1" min="1" max="100" value="50">
               <output class="pngquantQualityNumber" name="pngquantQualityNumber" for="pngquantQuality">50</output>
             </fieldset>
-            <fieldset oninput="pngquantDitherNumber.value = pngquantDither.valueAsNumber">
-              <pre>Floyd-Steinberg dither</pre>
-              <input class="pngquantDither" name="pngquantDither" type="range" step="0.001" min="0" max="1" value="1">
-              <output class="pngquantDitherNumber" name="pngquantDitherNumber" for="pngquantDither">1</output>
-            </fieldset>
           </form>
         </div>
         <div class="webpControls">
@@ -172,10 +167,9 @@ function setCompressedPngSize(size, originalImageSize, compressedLabel, pngquant
 
 function compressPng(originalImageURI, pngquantForm) {
   const quality = pngquantForm.pngquantQuality.valueAsNumber;
-  const dither = pngquantForm.pngquantDither.valueAsNumber;
   const tmpfile = os.tmpdir() + '/pact-' + Date.now() + '.png';
 
-  return execa(`pngquant --verbose --quality=0-${quality} --floyd=${dither} --speed=1 -o ${tmpfile} ${originalImageURI}`, { shell: true })
+  return execa(`pngquant --verbose --quality=0-${quality} --speed=1 -o ${tmpfile} ${originalImageURI}`, { shell: true })
     .then(() => fs.stat(tmpfile))
     .then(stats => ({ pngURI: tmpfile, pngSize: stats.size }))
     .catch((e) => console.log(e));
