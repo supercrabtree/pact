@@ -22,5 +22,15 @@
     "execa": "^1.0.0",
     "filesize": "^4.1.2",
     "update-notifier": "^3.0.0"
-  }
+  },
+  "files": [
+    "cli.js",
+    "compression-section.js",
+    "debounce.js",
+    "index.html",
+    "main.js",
+    "memoize.js",
+    "renderer.js",
+    "styles.css"
+  ]
 }
